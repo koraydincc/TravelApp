@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { List, Input } from 'antd';
+import { List, Input, Row, Col } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTravelData } from '../Store/Slices/travelDataSlice';
+import CountryStatesSelect from '../Components/CountryStatesSelect';
+import TravelAdd from '../Components/TravelAdd';
 
 const { Search } = Input;
 
 const TravelPlanSettings = () => {
   const [location, setLocation] = useState('');
   const [venues, setVenues] = useState([]);
-  const travelData = useSelector(state => state.travelData);
   const dispatch = useDispatch();
 
-  console.log(travelData);
 
   const handleSearch = async () => {
     try {
@@ -23,41 +23,23 @@ const TravelPlanSettings = () => {
         }
       };
 
-      const response = await fetch(`https://api.foursquare.com/v3/places/search?limit=50&query=${location}`, options);
+      const response = await fetch(`https://api.foursquare.com/v3/places/search?limit=50&near=${location}`, options);
       const data = await response.json();
       console.log(data);
       
-      // Güncellenmiş veriyi state'e kaydet
       setVenues(data.results);
       
-      // Redux store'a veriyi gönder
-      dispatch(setTravelData(data.results));
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <div>
-      <Search
-        placeholder="Lütfen bir konum girin"
-        allowClear
-        enterButton="Ara"
-        size="large"
-        onSearch={handleSearch}
-        onChange={(e) => setLocation(e.target.value)}
-        style={{ marginBottom: '16px' }}
-      />
-      <List
-        bordered
-        dataSource={venues}
-        renderItem={item => (
-          <List.Item>
-            {item.name}
-          </List.Item>
-        )}
-      />
-    </div>
+    <Row style={{display:'flex', justifyContent:'center', margin:'20px', height:'80%'}} justify="center">
+      <Col xs={24} md={12}>
+        <TravelAdd/>
+      </Col>
+    </Row>
   );
 };
 

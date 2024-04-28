@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { setTravelData } from './Slices/travelDataSlice';
+import travelDataSlice from './Slices/travelDataSlice';
 
 
 const store = configureStore({
   reducer: {
-        travelData: setTravelData,
+        travelData: travelDataSlice,
   }
 });
 
