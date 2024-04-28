@@ -12,7 +12,7 @@ function App() {
       <MainLayout>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path='/SeyahatPlanıOlustur' element={<CreateTravel/>}/>
+          <Route path='/SeyahatPlaniOlustur' element={<CreateTravel/>}/>
         </Routes>
       </MainLayout>
     </Router>
