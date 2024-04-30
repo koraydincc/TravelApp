@@ -112,7 +112,7 @@ const onFinish = (values) => {
           }}
         >
           <Form.Item
-            name="group"
+            name="Seyahat Adı"
             label="Seyahat Planına Bir İsim Ver"
             rules={[
               {

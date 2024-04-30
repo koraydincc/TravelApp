@@ -7,7 +7,7 @@ import countryData from '../data.json';
 
 const { Option } = Select;
 
-const CountryStatesSelect = ({ dispatch }) => { // Dispatch props olarak alındı
+const CountryStatesSelect = ({ dispatch, onCitySelect }) => { // Dispatch props olarak alındı
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
 
@@ -20,6 +20,8 @@ const CountryStatesSelect = ({ dispatch }) => { // Dispatch props olarak alınd�
   const handleStateChange = (value) => {
     setSelectedState(value);
     dispatch(setCity(value)); // Redux'a seçilen şehir bilgisini yolla
+    // Seçilen şehri API'ye göndermek için onCitySelect fonksiyonunu çağır
+    onCitySelect(value);
   };
 
   return (
