@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, Modal } from 'antd';
 import CountryStatesSelect from './CountryStatesSelect';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux'; // Importing useDispatch
+import { setTravelPlans } from '../Store/Slices/travelDataSlice';
 
 const layout = {
   labelCol: {
@@ -24,7 +25,9 @@ const TravelAdd = () => {
   const [travels, setTravels] = useState([]);
   const city = useSelector(state => state.travelData?.city);
   const country = useSelector(state => state.travelData?.country);
-
+  const data = useSelector(state => state.travelData?.travelResult)
+  const dispatch = useDispatch();
+  console.log(data)
   const hideUserModal = () => {
     setOpen(false);
   };
@@ -32,6 +35,8 @@ const TravelAdd = () => {
   const onFinish = values => {
     const travelName = values['Seyahat Adı'];
     console.log('Seyahat Planı Adı:', travelName, 'Ülke:', country, 'Şehir:', city);
+    setTravels([...travels, { travelName, country, city, data }]);
+    dispatch(setTravelPlans(travels)); 
     setOpen(false);
   };
 
@@ -40,10 +45,9 @@ const TravelAdd = () => {
   };
 
   const handleCreateTravel = values => {
-    const travelName = values['Seyahat Adı'];
-    setTravels([...travels, { travelName, country, city }]);
     setOpen(false);
   };
+
 
   return (
     <div>

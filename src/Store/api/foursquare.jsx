@@ -11,10 +11,10 @@ export const getPlaceData = async (location) => {
                 "Authorization": "fsq3K09rcSqI11V2b4J3PKADIblzI9/+4QTijASINK0i6jQ="
             }
         });
-        console.log("API Response:", response.data); // API'den gelen veriyi kontrol etmek için
+        console.log("API Response:", response.data); 
         return response.data;
     } catch (error) {
         console.error("getPlaceData:", error);
-        throw error; // Hata yeniden fırlatılıyor
+        throw error; 
     }
 };

@@ -1,5 +1,5 @@
 import * as api from "../api/foursquare";
-import { setTravelResult } from "../Slices/travelDataSlice";
+import { setTravelPlans, setTravelResult } from "../Slices/travelDataSlice";
 
 export const getPlaceData = (location) => async (dispatch) => {
     try {
@@ -9,3 +9,4 @@ export const getPlaceData = (location) => async (dispatch) => {
         console.log("getPlaceData", error)
     }
 };
+
