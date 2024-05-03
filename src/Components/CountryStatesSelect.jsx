@@ -1,27 +1,27 @@
 import React, { useState } from 'react';
 import { Select, Space } from 'antd';
-import { connect } from 'react-redux'; // Connect import edildi
-import { setCity, setCountry } from '../Store/Slices/travelDataSlice'; // Redux eylemi
+import { connect, useDispatch } from 'react-redux';
+import { setCity, setCountry } from '../Store/Slices/travelDataSlice';
 
 import countryData from '../data.json';
 
 const { Option } = Select;
 
-const CountryStatesSelect = ({ dispatch, onCitySelect }) => { // Dispatch props olarak alındı
+const CountryStatesSelect = () => {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
+  const dispatch = useDispatch()
 
   const handleCountryChange = (value) => {
     setSelectedCountry(value);
     setSelectedState(null); 
-    dispatch(setCountry(value)); // Redux'a seçilen ülke bilgisini yolla
+    dispatch(setCountry(value));
   };
   
   const handleStateChange = (value) => {
     setSelectedState(value);
-    dispatch(setCity(value)); // Redux'a seçilen şehir bilgisini yolla
-    // Seçilen şehri API'ye göndermek için onCitySelect fonksiyonunu çağır
-    onCitySelect(value);
+    dispatch(setCity(value));
+    console.log(value)
   };
 
   return (
@@ -39,16 +39,17 @@ const CountryStatesSelect = ({ dispatch, onCitySelect }) => { // Dispatch props 
         ))}
       </Select>
       {selectedCountry && (
-        <Select
-          name='city'
-          placeholder="Şehir Seçin"
-          onChange={handleStateChange}
-          style={{ width: 200 }}
-        >
+     <Select
+     name='city'
+     placeholder="Şehir Seçin"
+     onChange={handleStateChange}
+     style={{ width: 200 }}
+   >
+
           {countryData
             .find((country) => country.name === selectedCountry)
             .states.map((state) => (
-              <Option key={state.id} value={state.name}>
+              <Option onChange={(value) => dispatch(setCity(value))} key={state.id} value={state.name}>
                 {state.name}
               </Option>
             ))}
@@ -58,4 +59,4 @@ const CountryStatesSelect = ({ dispatch, onCitySelect }) => { // Dispatch props 
   );
 };
 
-export default connect()(CountryStatesSelect); // connect kullanıldı ve dispatch prop'u alındı
+export default connect()(CountryStatesSelect);

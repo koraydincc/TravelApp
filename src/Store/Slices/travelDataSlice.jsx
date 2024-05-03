@@ -1,31 +1,41 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
+const initialState = {
+    country: [],
+    city:[],
+    travelName:[],
+    travelPlans: [],
+    travelResult: []
+};
 
 const travelDataSlice = createSlice({
-    name: 'TravelData',
-    initialState: {
-        country: [],
-        city:[],
-        travelName:[],
-        travelPlans: [],
-        travelResult: []
-    },
+    name: 'travel',
+    initialState,
     reducers: {
         setCountry(state, action) {
-            state.country = action.payload;
+            return {
+                ...state,
+                country: action.payload
+            };
         },
         setCity(state, action) {
-            state.city = action.payload;
-
+            return {
+                ...state,
+                city: action.payload
+            };
         },
         setTravelName(state, action) {
-            state.travelName = action.payload;
+            return {
+                ...state,
+                travelName: action.payload
+            };
         },
-        setTravelResult(state,action) {
-            state.travelResult = action.payload;
+        setTravelResult(state, action) {
+            return {
+                ...state,
+                travelResult: action.payload
+            };
         }
-      
     }
 });
 
