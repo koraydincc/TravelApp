@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    country: [],
-    city:[],
+    country: null,
+    city:null,
     travelName:[],
     travelPlans: [],
     travelResult: []

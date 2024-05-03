@@ -1,5 +1,5 @@
 import * as api from "../api/foursquare";
-import { setTravelResult } from "./slice";
+import { setTravelResult } from "../Slices/travelDataSlice";
 
 export const getPlaceData = (location) => async (dispatch) => {
     try {

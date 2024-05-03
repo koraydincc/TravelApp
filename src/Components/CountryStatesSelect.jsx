@@ -49,7 +49,7 @@ const CountryStatesSelect = () => {
           {countryData
             .find((country) => country.name === selectedCountry)
             .states.map((state) => (
-              <Option onChange={(value) => dispatch(setCity(value))} key={state.id} value={state.name}>
+              <Option key={state.id} value={state.name}>
                 {state.name}
               </Option>
             ))}
