@@ -1,9 +1,5 @@
-import {
-  createStore,
-  applyMiddleware,
-  compose,
-} from "redux";
-import {thunk} from 'redux-thunk';
+import { createStore, applyMiddleware, compose } from "redux";
+import {thunk} from 'redux-thunk'; 
 import travelDataReducer from "./Slices/travelDataSlice";
 
 function saveToLocalStorage(state) {
@@ -31,7 +27,11 @@ function loadFromLocalStorage() {
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const persistedState = loadFromLocalStorage();
 
-const store = createStore(travelDataReducer, persistedState, composeEnhancers(applyMiddleware(thunk)));
+const store = createStore(
+  travelDataReducer, 
+  persistedState,
+  composeEnhancers(applyMiddleware(thunk)) 
+);
 
 store.subscribe(() => saveToLocalStorage(store.getState()));
 

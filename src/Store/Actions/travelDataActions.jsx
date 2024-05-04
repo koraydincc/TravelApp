@@ -6,7 +6,15 @@ export const getPlaceData = (location) => async (dispatch) => {
         const data = await api.getPlaceData(location);
         dispatch(setTravelResult(data));
     } catch (error) {
-        console.log("getPlaceData", error)
+        console.log("getPlaceData", error);
     }
 };
 
+export const travelCreate = (travelName, country, city, data) => async (dispatch) => {
+    try {
+        const travelPlans = { travelName, country, city, data };
+        dispatch(setTravelPlans(travelPlans));
+    } catch (error) {
+        console.error("Error in travelCreate:", error);
+    }
+};

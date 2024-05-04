@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { Select, Space } from 'antd';
-import { connect, useDispatch } from 'react-redux';
+import { Select, Space, Button } from 'antd';
+import { useDispatch } from 'react-redux';
 import { setCity, setCountry } from '../Store/Slices/travelDataSlice';
 
 import countryData from '../data.json';
 
 const { Option } = Select;
 
-const CountryStatesSelect = () => {
+const CountryStatesSelect = ({ onClose }) => {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
-  const dispatch = useDispatch()
+  const [openModal, setOpenModal] = useState(false);
+  const dispatch = useDispatch();
 
   const handleCountryChange = (value) => {
     setSelectedCountry(value);
@@ -21,8 +22,8 @@ const CountryStatesSelect = () => {
   const handleStateChange = (value) => {
     setSelectedState(value);
     dispatch(setCity(value));
-    console.log(value)
   };
+
 
   return (
     <Space direction="vertical">
@@ -39,13 +40,12 @@ const CountryStatesSelect = () => {
         ))}
       </Select>
       {selectedCountry && (
-     <Select
-     name='city'
-     placeholder="Şehir Seçin"
-     onChange={handleStateChange}
-     style={{ width: 200 }}
-   >
-
+        <Select
+          name='city'
+          placeholder="Şehir Seçin"
+          onChange={handleStateChange}
+          style={{ width: 200 }}
+        >
           {countryData
             .find((country) => country.name === selectedCountry)
             .states.map((state) => (
@@ -55,8 +55,9 @@ const CountryStatesSelect = () => {
             ))}
         </Select>
       )}
+  
     </Space>
   );
 };
 
-export default connect()(CountryStatesSelect);
+export default CountryStatesSelect;

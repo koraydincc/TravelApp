@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { Button, Form, Input, Modal } from 'antd';
-import CountryStatesSelect from './CountryStatesSelect';
-import { useSelector, useDispatch } from 'react-redux'; // Importing useDispatch
+import React, { useEffect, useState } from 'react';
+import { Avatar, Button, Form, Input, Modal, Space, Typography } from 'antd';
+import { SmileOutlined, UserOutlined } from '@ant-design/icons';
+import CountryCitySelect from './CountryStatesSelect';
+import { useDispatch, useSelector } from 'react-redux';
+import { getPlaceData } from '../Store/api/foursquare';
 import { setTravelPlans } from '../Store/Slices/travelDataSlice';
 
 const layout = {
@@ -20,37 +22,55 @@ const tailLayout = {
   },
 };
 
-const TravelAdd = () => {
+const App = () => {
   const [open, setOpen] = useState(false);
-  const [travels, setTravels] = useState([]);
-  const city = useSelector(state => state.travelData?.city);
-  const country = useSelector(state => state.travelData?.country);
-  const data = useSelector(state => state.travelData?.travelResult)
+  const [travelName, setTravelName] = useState(''); // Define travelName state
+
+  const country = useSelector(state => state.country);
+  const city = useSelector(state => state.city);
+
   const dispatch = useDispatch();
-  console.log(data)
+
+  console.log(city);
+
+  const showUserModal = () => {
+    setOpen(true);
+  };
+
   const hideUserModal = () => {
     setOpen(false);
   };
 
-  const onFinish = values => {
-    const travelName = values['Seyahat Adı'];
-    console.log('Seyahat Planı Adı:', travelName, 'Ülke:', country, 'Şehir:', city);
-    setTravels([...travels, { travelName, country, city, data }]);
-    dispatch(setTravelPlans(travels)); 
-    setOpen(false);
+  const onFinish = (values) => {
+    const travelName = values.travelName;
+    console.log(values);
+    console.log('Finish:', values);
+
+    if (travelName && city && country) {
+      const travel = { city: city, country: country, travelName: travelName };
+      dispatch(setTravelPlans(travel));
+    }
   };
 
-  const showTravelModal = () => {
-    setOpen(true);
+  const handleCityCountryChange = (selectedCountry, selectedCity) => {
+    dispatch(getPlaceData(selectedCity));
   };
-
-  const handleCreateTravel = values => {
-    setOpen(false);
-  };
-
 
   return (
-    <div>
+    <Form.Provider
+      onFormFinish={(name, { values, forms }) => {
+        console.log(values);
+        if (name === 'basicForm') {
+          const { basicForm } = forms;
+          const travels = basicForm.getFieldValue('travel') || [];
+          console.log(city);
+          basicForm.setFieldsValue({
+            travel: [...travels, { city: city, country: country, travelName: travelName }],
+          });
+          setOpen(false);
+        }
+      }}
+    >
       <Form
         {...layout}
         name="basicForm"
@@ -60,57 +80,50 @@ const TravelAdd = () => {
         }}
       >
         <Form.Item
-          name="Seyahat Adı"
-          label="Seyahat Planına Bir İsim Ver"
+          name="travelName"
+          label="Gezinize Bir İsim Verin"
+          value="travelName"
           rules={[
             {
               required: true,
-              message: 'Lütfen seyahat planının adını girin!',
             },
           ]}
         >
           <Input />
         </Form.Item>
 
+        <Form.Item name="travel" hidden />
+
         <Form.Item {...tailLayout}>
           <Button htmlType="submit" type="primary">
-            Seyahat Oluştur
+            Gönder
           </Button>
           <Button
             htmlType="button"
             style={{
               margin: '0 8px',
             }}
-            onClick={showTravelModal}
+            onClick={showUserModal}
           >
-            Konumu Ayarla
+            Ülke ve Şehir Seç
           </Button>
         </Form.Item>
       </Form>
 
       <Modal
-        title="Seyahat Planı Konumu Ayarla"
+        title="Seyahat Planı Oluştur"
         visible={open}
         onCancel={hideUserModal}
-        footer={null}
+        footer={[
+          <Button key="cancel" onClick={hideUserModal}>İptal</Button>,
+          <Button key="submit" type="primary" onClick={hideUserModal}>Kaydet</Button>
+        ]}
       >
-        <Form
-          {...layout}
-          name="modalForm"
-          onFinish={handleCreateTravel}
-        >
-          <Form.Item label="Ülke" name="country" initialValue={country}>
-            <CountryStatesSelect />
-          </Form.Item>
-          <Form.Item {...tailLayout}>
-            <Button htmlType="submit" type="primary">
-              Kaydet
-            </Button>
-          </Form.Item>
-        </Form>
+        <CountryCitySelect onChange={handleCityCountryChange} />
       </Modal>
-    </div>
+
+    </Form.Provider>
   );
 };
 
-export default TravelAdd;
+export default App;
