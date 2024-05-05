@@ -1,5 +1,6 @@
+import { notification } from "antd";
 import * as api from "../api/foursquare";
-import { setTravelPlans, setTravelResult } from "../Slices/travelDataSlice";
+import { setSelectedTravel, setTravelPlans, setTravelResult } from "../Slices/travelDataSlice";
 
 export const getPlaceData = (location) => async (dispatch) => {
     try {
@@ -15,6 +16,19 @@ export const getPlaceData = (location) => async (dispatch) => {
         console.log("getPlaceData", error);
     }
 };
+
+export const selectedTravel = (data) => async (dispatch) => {
+    try {
+         console.log(data)
+        await dispatch(setSelectedTravel(data));
+   
+    } catch (error) {
+        notification.error({
+            message: 'Hata',
+            description: `${error}`
+        });
+    }
+}
 
 
 export const travelCreate = (travelName, country, city, data) => async (dispatch, getState) => {

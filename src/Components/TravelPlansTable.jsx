@@ -3,7 +3,7 @@ import { notification } from 'antd';
 import { Table, Space, Button } from 'antd';
 import { EyeOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteTravel } from '../Store/Actions/travelDataActions';
+import { deleteTravel, selectedTravel } from '../Store/Actions/travelDataActions';
 import { useNavigate } from 'react-router-dom';
 
 const { Column, ColumnGroup } = Table;
@@ -26,7 +26,8 @@ const TravelPlansTable = () => {
   }
 
   const handleViewDetail = (record) => {
-    const { travelName } = record;
+    const { travelName, data } = record;
+    dispatch(selectedTravel(data));
     navigate(`/SeyahatPlanimDetay/${travelName}`);
   };
   
