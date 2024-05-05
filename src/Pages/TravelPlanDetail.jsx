@@ -1,8 +1,10 @@
 import React from 'react'
+import { useParams } from 'react-router-dom'
 
 function TravelPlanDetail() {
+  const params = useParams()
   return (
-    <div>TravelPlanDetail</div>
+    <div>{params.travelName}</div>
   )
 }
 

@@ -103,7 +103,7 @@ const App = () => {
         data: travelResult
       }));
     }
-  }, [dispatch, formValues]); // Bağımlılıkları güncelledik
+  }, [dispatch, formValues, travelResult]); 
   
 
   

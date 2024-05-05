@@ -12,9 +12,10 @@ function App() {
     <Router>
       <MainLayout>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route exact path="/" element={<HomePage />} />
           <Route path='/SeyahatPlaniOlustur' element={<CreateTravel/>}/>
           <Route path='/SeyahatPlanimDetay' element={<TravelPlanDetail/>}/>
+          <Route exact path='/SeyahatPlanimDetay/:travelName' element={<TravelPlanDetail/>}/>
         </Routes>
       </MainLayout>
     </Router>

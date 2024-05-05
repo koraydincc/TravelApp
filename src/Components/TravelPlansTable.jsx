@@ -4,12 +4,15 @@ import { Table, Space, Button } from 'antd';
 import { EyeOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteTravel } from '../Store/Actions/travelDataActions';
+import { useNavigate } from 'react-router-dom';
 
 const { Column, ColumnGroup } = Table;
 
 const TravelPlansTable = () => {
-  const data = useSelector(state => state.travelPlans)
-  const dispatch = useDispatch()
+  const data = useSelector(state => state.travelPlans);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   if (!data || Object.keys(data).length === 0) {
     notification.info({
       message: 'Seyahat Planı Bulunamadı',
@@ -23,24 +26,21 @@ const TravelPlansTable = () => {
   }
 
   const handleViewDetail = (record) => {
-    // Detay görüntüleme işlemleri burada gerçekleştirilir
+    const { travelName } = record;
+    navigate(`/SeyahatPlanimDetay/${travelName}`);
   };
   
+
   const handleDelete = (record) => {
     const { travelName } = record;
-    
-    console.log(`Deleting travel plan with travelName: ${JSON.stringify(data)}`);
-    dispatch(deleteTravel(travelName, data)); // Burada data'yı doğrudan gönderiyoruz
+    dispatch(deleteTravel(travelName, data));
     notification.success({
-        message: 'Seyahat Planı Silindi',
-        description: `${travelName} adlı seyahat planı başarıyla silindi.`,
+      message: 'Seyahat Planı Silindi',
+      description: `${travelName} adlı seyahat planı başarıyla silindi.`,
     });
-};
-
-
+  };
 
   const dataSource = Object.values(data).map(item => item.travelName);
-
 
   return (
     <Table dataSource={dataSource}>
