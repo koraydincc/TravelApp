@@ -22,6 +22,7 @@ const CountryStatesSelect = ({ onClose }) => {
   const handleStateChange = (value) => {
     setSelectedState(value);
     dispatch(setCity(value));
+    
   };
 
 

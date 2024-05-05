@@ -1,129 +1,149 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Button, Form, Input, Modal, Space, Typography } from 'antd';
-import { SmileOutlined, UserOutlined } from '@ant-design/icons';
-import CountryCitySelect from './CountryStatesSelect';
+import { Button, Form, Input, Modal, Radio } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import CountryStatesSelect from './CountryStatesSelect';
 import { useDispatch, useSelector } from 'react-redux';
-import { getPlaceData } from '../Store/api/foursquare';
-import { setTravelPlans } from '../Store/Slices/travelDataSlice';
+import { getPlaceData, travelCreate } from '../Store/Actions/travelDataActions';
+import { setCity } from '../Store/Slices/travelDataSlice';
 
-const layout = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 16,
-  },
-};
+const CollectionCreateForm = ({ initialValues, onFormInstanceReady }) => {
+  const [form] = Form.useForm();
 
-const tailLayout = {
-  wrapperCol: {
-    offset: 8,
-    span: 16,
-  },
-};
+  useEffect(() => {
+    onFormInstanceReady(form);
+  }, []);
 
-const App = () => {
-  const [open, setOpen] = useState(false);
-  const [travelName, setTravelName] = useState(''); // Define travelName state
-
-  const country = useSelector(state => state.country);
-  const city = useSelector(state => state.city);
-
-  const dispatch = useDispatch();
-
-  console.log(city);
-
-  const showUserModal = () => {
-    setOpen(true);
-  };
-
-  const hideUserModal = () => {
-    setOpen(false);
-  };
-
-  const onFinish = (values) => {
-    const travelName = values.travelName;
-    console.log(values);
-    console.log('Finish:', values);
-
-    if (travelName && city && country) {
-      const travel = { city: city, country: country, travelName: travelName };
-      dispatch(setTravelPlans(travel));
-    }
-  };
-
-  const handleCityCountryChange = (selectedCountry, selectedCity) => {
-    dispatch(getPlaceData(selectedCity));
-  };
+  
 
   return (
-    <Form.Provider
-      onFormFinish={(name, { values, forms }) => {
-        console.log(values);
-        if (name === 'basicForm') {
-          const { basicForm } = forms;
-          const travels = basicForm.getFieldValue('travel') || [];
-          console.log(city);
-          basicForm.setFieldsValue({
-            travel: [...travels, { city: city, country: country, travelName: travelName }],
-          });
-          setOpen(false);
+    <Form layout="vertical" form={form} name="form_in_modal" initialValues={initialValues}>
+      <Form.Item
+        name="title"
+        label="Seyahatinize Bir İsim Verin"
+        rules={[
+          {
+            required: true,
+            message: 'Please input the title of collection!',
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item  label="Ülke ve Şehir Seçimi Yapın">
+         <CountryStatesSelect/>
+      </Form.Item>
+    </Form>
+  );
+};
+
+const CollectionCreateFormModal = ({ open, onCreate, onCancel, initialValues }) => {
+  const [formInstance, setFormInstance] = useState();
+  const city = useSelector(state => state.city);
+  const country = useSelector(state => state.country);
+  const data = useSelector(state=>state.travelResult)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (city && country) {
+      dispatch(getPlaceData({location: city}))
+    }
+}, [dispatch, city, country])
+
+  
+  return (
+    <Modal
+      visible={open}
+      title="Seyahat Planı Oluştur"
+      okText="Oluştur"
+      cancelText="İptal"
+      okButtonProps={{
+        autoFocus: true,
+      }}
+      onCancel={onCancel}
+      destroyOnClose
+      onOk={async () => {
+        try {
+          const values = await formInstance?.validateFields();
+          
+
+          const updatedValues = { ...values, city, country, data };
+
+          onCreate(updatedValues);
+
+          formInstance?.resetFields();
+        } catch (error) {
+          console.log('Failed:', error);
         }
       }}
     >
-      <Form
-        {...layout}
-        name="basicForm"
-        onFinish={onFinish}
-        style={{
-          maxWidth: 600,
+      <CollectionCreateForm
+        initialValues={initialValues}
+        onFormInstanceReady={(instance) => {
+          setFormInstance(instance);
         }}
-      >
-        <Form.Item
-          name="travelName"
-          label="Gezinize Bir İsim Verin"
-          value="travelName"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item name="travel" hidden />
-
-        <Form.Item {...tailLayout}>
-          <Button htmlType="submit" type="primary">
-            Gönder
-          </Button>
-          <Button
-            htmlType="button"
-            style={{
-              margin: '0 8px',
-            }}
-            onClick={showUserModal}
-          >
-            Ülke ve Şehir Seç
-          </Button>
-        </Form.Item>
-      </Form>
-
-      <Modal
-        title="Seyahat Planı Oluştur"
-        visible={open}
-        onCancel={hideUserModal}
-        footer={[
-          <Button key="cancel" onClick={hideUserModal}>İptal</Button>,
-          <Button key="submit" type="primary" onClick={hideUserModal}>Kaydet</Button>
-        ]}
-      >
-        <CountryCitySelect onChange={handleCityCountryChange} />
-      </Modal>
-
-    </Form.Provider>
+      />
+    </Modal>
   );
 };
+
+const App = () => {
+  const [formValues, setFormValues] = useState();
+  const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+  const travelResult = useSelector(state => state.travelResult);
+  const city = useSelector(state => state.city);
+  const country = useSelector(state => state.country);
+
+  useEffect(() => {
+    if (travelResult && city && country && formValues?.title) {
+      dispatch(travelCreate({
+        travelName: formValues?.title,
+        city: city,
+        country: country,
+        data: travelResult
+      }));
+    }
+  }, [dispatch, formValues]); // Bağımlılıkları güncelledik
+  
+
+  
+
+  const onCreate = async (values) => {
+    console.log('Received values of form: ', values);
+    setFormValues(values);
+
+    
+    dispatch(getPlaceData({ location: values.city }));
+
+    setOpen(false);
+
+  };
+
+  const handleCancel = () => {
+    setFormValues(null); 
+    setOpen(false); 
+  };
+
+  const handleCreateClick = () => {
+    setOpen(true); 
+  };
+  
+  return (
+    <>
+      <Button type="primary" icon={<PlusOutlined />} onClick={handleCreateClick}>
+        Seyahat Oluştur
+      </Button>
+      <CollectionCreateFormModal
+        open={open}
+        onCreate={onCreate}
+        onCancel={handleCancel} // Modal kapatıldığında çağrılacak fonksiyon
+        initialValues={{
+          modifier: 'public',
+        }}
+      />
+    </>
+  );
+};
+
 
 export default App;

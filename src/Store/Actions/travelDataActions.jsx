@@ -3,18 +3,42 @@ import { setTravelPlans, setTravelResult } from "../Slices/travelDataSlice";
 
 export const getPlaceData = (location) => async (dispatch) => {
     try {
-        const data = await api.getPlaceData(location);
-        dispatch(setTravelResult(data));
+        if (!location) {
+            console.log("Location is undefined, skipping API request.");
+            return; 
+        }
+
+        return api.getPlaceData(location).then(data => {
+            dispatch(setTravelResult(data))
+        });
     } catch (error) {
         console.log("getPlaceData", error);
     }
 };
 
-export const travelCreate = (travelName, country, city, data) => async (dispatch) => {
+
+export const travelCreate = (travelName, country, city, data) => async (dispatch, getState) => {
     try {
-        const travelPlans = { travelName, country, city, data };
-        dispatch(setTravelPlans(travelPlans));
+        const newTravelPlan = { travelName, country, city, data };
+        const currentTravelPlans = getState().travelPlans; 
+        const updatedTravelPlans = { ...currentTravelPlans, [travelName.travelName]: newTravelPlan }; // Yeni seyahat planını ekleyerek güncelle
+        dispatch(setTravelPlans(updatedTravelPlans)); 
     } catch (error) {
         console.error("Error in travelCreate:", error);
     }
 };
+
+export const deleteTravel = (travelName, data) => async (dispatch) => {
+    try {
+        console.log("data", data);
+        const arrayData = Object.values(data)
+        const newArray = arrayData.filter(item => item.travelName.travelName !== travelName);
+         
+        dispatch(setTravelPlans(Object.values(newArray)));
+    } catch (error) {
+        console.error('Error deleting travel:', error);
+    }
+}
+
+
+
