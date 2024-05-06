@@ -136,7 +136,7 @@ const App = () => {
       <CollectionCreateFormModal
         open={open}
         onCreate={onCreate}
-        onCancel={handleCancel} // Modal kapatıldığında çağrılacak fonksiyon
+        onCancel={handleCancel} 
         initialValues={{
           modifier: 'public',
         }}

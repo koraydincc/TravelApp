@@ -1,8 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import TravelDetailList from '../Components/TravelDetailList'
 import { Col, Row } from 'antd'
+import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { setSelectedTravel } from '../Store/Slices/travelDataSlice'
 
 function TravelPlanDetail() {
+
+
+
+  
 
   return (
     <Row style={{margin:'2rem'}}>

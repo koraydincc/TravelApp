@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { ContactsOutlined, HomeOutlined, ControlOutlined, ContainerOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectedTravel } from '../Store/Actions/travelDataActions';
 
 const Header = () => {
   const [current, setCurrent] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
-  const { travelName } = useParams();
-  const travelPlans = useSelector(state => state.travelPlans);
+  const dispatch = useDispatch()
+  const data = useSelector(state => state.travelPlans);
 
   useEffect(() => {
     const pathname = location.pathname;
@@ -17,9 +18,12 @@ const Header = () => {
     setCurrent(item ? item.key : '');
   }, [location]);
 
+  const onClickTravelName = (travelName) => {
+    const travelSelect = Object.values(data).find(item => item.travelName.travelName === travelName);
+    dispatch(selectedTravel({data:travelSelect.travelName.data.results}))
+  };
 
-
-  const travelPlanItems = Object.values(travelPlans).map(plan => {
+  const travelPlanItems = Object.values(data).map(plan => {
     const travelName = typeof plan.travelName === 'object' ? plan.travelName.travelName : plan.travelName;
     return {
       label: travelName,
@@ -73,7 +77,14 @@ const Header = () => {
         item.children ? (
           <Menu.SubMenu key={item.key} icon={item.icon} title={item.label}>
             {item.children.map(child => (
-              <Menu.Item key={child.key} icon={item.icon} onClick={() => navigate(child.path)}>
+              <Menu.Item 
+                key={child.key} 
+                icon={item.icon} 
+                onClick={() => {
+                  onClickTravelName(child.label); 
+                  navigate(child.path);
+                }}
+              >
                 {child.label}
               </Menu.Item>
             ))}

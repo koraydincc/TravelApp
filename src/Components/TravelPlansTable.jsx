@@ -27,6 +27,7 @@ const TravelPlansTable = () => {
 
   const handleViewDetail = (record) => {
     const { travelName, data } = record;
+    console.log(data)
     dispatch(selectedTravel(data));
     navigate(`/SeyahatPlanimDetay/${travelName}`);
   };

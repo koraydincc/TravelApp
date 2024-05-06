@@ -6,7 +6,9 @@ import { useParams } from 'react-router-dom';
 const CardInfo = () => {
   const data = useSelector(state => state.selectedTravel); 
   const params = useParams()
-  const selectedData = data.results.find((item) => {
+  const rawData = data.results ?? data.data;
+
+  const selectedData = rawData?.find((item) => {
       return item.fsq_id === params.fsqID
   })
 
@@ -18,12 +20,12 @@ const CardInfo = () => {
          
           {selectedData && ( 
             <div>
-              <p>Mekan: {selectedData.name}</p>
-              <p>Adres: {selectedData.location.address}</p>
-              <p>Şehir: {selectedData.location.locality}</p>
-              <p>Ülke: {selectedData.location.country}</p>
-              <p>Açık Adres: {selectedData.location.formatted_address}</p>
-              <p>Posta Kodu: {selectedData.location.postcode}</p>
+              <p>Mekan: {selectedData?.name}</p>
+              <p>Adres: {selectedData?.location.address}</p>
+              <p>Şehir: {selectedData?.location.locality}</p>
+              <p>Ülke: {selectedData?.location.country}</p>
+              <p>Açık Adres: {selectedData?.location.formatted_address}</p>
+              <p>Posta Kodu: {selectedData?.location.postcode}</p>
  
 
          

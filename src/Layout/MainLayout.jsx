@@ -14,7 +14,7 @@ const layoutStyle = {
 function MainLayout({ children }) {
   return (
     <Layout style={layoutStyle}>
-      <Header />
+      <Header/>
       <Content>
         {children}
       </Content>

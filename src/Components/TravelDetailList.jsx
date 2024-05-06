@@ -11,9 +11,10 @@ const TravelPlacesTable = () => {
    const dispatch = useDispatch()
    const navigate = useNavigate()
    const params = useParams()
+   const rawData = places.data ?? places.results;
 
    const getPlaceDetail = (record) => {
-    const selectedPlace = places.results.find((item) => {
+    const selectedPlace = rawData?.find((item) => {
        console.log(record)
         return item.fsq_id === record.fsqID;
     });
@@ -72,7 +73,9 @@ const TravelPlacesTable = () => {
     
   ];
 
-  const data = places.results.map((place, index) => ({
+
+
+  const data = rawData?.map((place, index) => ({
     key: index,
     name: place.name,
     category: place.categories,
