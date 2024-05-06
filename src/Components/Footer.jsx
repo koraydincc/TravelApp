@@ -47,7 +47,7 @@ const AppFooter = () => {
           </Col>
         </Row>
       </div>
-      <div style={{ textAlign: 'center', marginTop: '20px' }}>
+      <div style={{ textAlign: 'center', marginTop: '10px' }}>
         Telif Hakkı © 2024 | TravelLingual
       </div>
     </Footer>

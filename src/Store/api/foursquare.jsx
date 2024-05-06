@@ -21,3 +21,40 @@ export const getPlaceData = async (location) => {
         throw error;
     }
 };
+
+
+export const getPlaceTips = async (fsqID) => {
+    try {
+         const fsq = fsqID.fsqID
+
+        const response = await axios.get(`https://api.foursquare.com/v3/places/${fsq}/tips`, {
+            headers: {
+                "Accept-Language": "tr",
+                "accept": "application/json",
+                "Authorization": "fsq3K09rcSqI11V2b4J3PKADIblzI9/+4QTijASINK0i6jQ="
+            }
+        });
+        return response.data
+    } catch (error) {
+        
+    }
+}
+
+export const getPlacePhoto = async (fsqID) => {
+    try {
+         const fsq = fsqID.fsqID
+
+        const response = await axios.get(`https://api.foursquare.com/v3/places/${fsq}/photos`, {
+            headers: {
+                "Accept-Language": "tr",
+                "accept": "application/json",
+                "Authorization": "fsq3K09rcSqI11V2b4J3PKADIblzI9/+4QTijASINK0i6jQ="
+            }
+        });
+        return response.data
+
+        
+    } catch (error) {
+        
+    }
+}

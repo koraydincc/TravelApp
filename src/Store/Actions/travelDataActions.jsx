@@ -1,6 +1,6 @@
 import { notification } from "antd";
 import * as api from "../api/foursquare";
-import { setSelectedTravel, setTravelPlans, setTravelResult } from "../Slices/travelDataSlice";
+import { setSelectedTravel, setSelectedTravelPlace, setSelectedTravelPlacePhoto, setTravelPlans, setTravelResult } from "../Slices/travelDataSlice";
 
 export const getPlaceData = (location) => async (dispatch) => {
     try {
@@ -16,6 +16,36 @@ export const getPlaceData = (location) => async (dispatch) => {
         console.log("getPlaceData", error);
     }
 };
+
+export const getPlaceTips = (fsqID) => async (dispatch) => {
+    try {
+         if (!fsqID) {
+             console.log("Undifenend fsqID")
+             return
+         }
+
+         return api.getPlaceTips(fsqID).then(data => {
+            dispatch(setSelectedTravelPlace(data))
+         })
+    } catch (error) {
+        console.log("getPlaceTips" , error)
+    }
+}
+
+export const getPlacePhoto = (fsqID) => async (dispatch) => {
+    try {
+         if (!fsqID) {
+             console.log("Undifenend fsqID")
+             return
+         }
+
+         return api.getPlacePhoto(fsqID).then(data => {
+            dispatch(setSelectedTravelPlacePhoto(data))
+         })
+    } catch (error) {
+        console.log("getPlaceTips" , error)
+    }
+}
 
 export const selectedTravel = (data) => async (dispatch) => {
     try {

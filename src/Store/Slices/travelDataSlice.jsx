@@ -6,7 +6,10 @@ const initialState = {
     travelName: [],
     travelPlans: [],
     travelResult: [],
-    selectedTravel: []
+    selectedTravel: [],
+    selectedTravelPlace: [],
+    selectedTravelPlacePhoto: []
+
 };
 
 const travelDataSlice = createSlice({
@@ -30,9 +33,15 @@ const travelDataSlice = createSlice({
         },
         setSelectedTravel(state,action) {
             state.selectedTravel = action.payload
+        },
+        setSelectedTravelPlace(state,action) {
+            state.selectedTravelPlace = action.payload
+        },
+        setSelectedTravelPlacePhoto(state,action) {
+            state.selectedTravelPlacePhoto = action.payload
         }
     }
 });
 
-export const { setCountry, setCity, setTravelName, setTravelResult, setTravelPlans,setSelectedTravel } = travelDataSlice.actions;
+export const {setSelectedTravelPlacePhoto, setCountry,setSelectedTravelPlace, setCity, setTravelName, setTravelResult, setTravelPlans,setSelectedTravel } = travelDataSlice.actions;
 export default travelDataSlice.reducer;
